@@ -131,3 +131,4 @@ dmypy.json
 .vscode/
 femas-venv/
 static/
+media/
