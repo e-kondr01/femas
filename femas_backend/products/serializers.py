@@ -35,3 +35,13 @@ class SofaSerializer(serializers.ModelSerializer):
             'id', 'product', 'size', 'mechanism',
             'collection', 'code'
         ]
+
+
+class TableSerializer(serializers.ModelSerializer):
+    product = ProductSerializer()
+
+    class Meta:
+        model = Table
+        fields = [
+            'id', 'product', 'type', 'collection'
+        ]

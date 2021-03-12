@@ -3,7 +3,7 @@ from django.db import models
 
 """
 class (models.Model):
-    product = models.OneToOneField(
+    product = models.ForeignKey(
         to=Product,
         on_delete=models.CASCADE,
         verbose_name='общие данные товара')
@@ -36,7 +36,7 @@ class Product(models.Model):
 
 
 class Sofa(models.Model):
-    product = models.OneToOneField(
+    product = models.ForeignKey(
         to=Product,
         on_delete=models.CASCADE,
         verbose_name='общие данные товара')
@@ -67,7 +67,7 @@ class Sofa(models.Model):
 
 
 class Bed(models.Model):
-    product = models.OneToOneField(
+    product = models.ForeignKey(
         to=Product,
         on_delete=models.CASCADE,
         verbose_name='общие данные товара')
@@ -93,7 +93,7 @@ class Bed(models.Model):
 
 
 class Table(models.Model):
-    product = models.OneToOneField(
+    product = models.ForeignKey(
         to=Product,
         on_delete=models.CASCADE,
         verbose_name='общие данные товара')
@@ -116,7 +116,7 @@ class Table(models.Model):
 
 
 class Armchair(models.Model):
-    product = models.OneToOneField(
+    product = models.ForeignKey(
         to=Product,
         on_delete=models.CASCADE,
         verbose_name='общие данные товара')
@@ -134,7 +134,7 @@ class Armchair(models.Model):
 
 
 class Chair(models.Model):
-    product = models.OneToOneField(
+    product = models.ForeignKey(
         to=Product,
         on_delete=models.CASCADE,
         verbose_name='общие данные товара')
@@ -152,7 +152,7 @@ class Chair(models.Model):
 
 
 class Kitchenware(models.Model):
-    product = models.OneToOneField(
+    product = models.ForeignKey(
         to=Product,
         on_delete=models.CASCADE,
         verbose_name='общие данные товара')
@@ -166,7 +166,7 @@ class Kitchenware(models.Model):
 
 
 class Accessory(models.Model):
-    product = models.OneToOneField(
+    product = models.ForeignKey(
         to=Product,
         on_delete=models.CASCADE,
         verbose_name='общие данные товара')

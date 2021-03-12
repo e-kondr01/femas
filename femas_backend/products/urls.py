@@ -4,5 +4,5 @@ from .views import *
 
 
 urlpatterns = [
-    path('sofas', SofaListView.as_view()),
+    path('<str:product_class>', ObjectListView.as_view()),
 ]
