@@ -2,46 +2,32 @@ from rest_framework import serializers
 
 from .models import *
 
-
-class ProductSerializer(serializers.ModelSerializer):
-    # photos = serializers.SlugRelatedField(
-    #     many=True,
-    #     slug_field='photo',
-    #     read_only=True,
-    #     required=False,
-    # )
-    # videos = serializers.SlugRelatedField(
-    #     many=True,
-    #     slug_field='video',
-    #     read_only=True,
-    #     required=False
-    #     # нужно ли
-    # )
-    # По-другому надо
-
-    class Meta:
-        model = Product
-        fields = [
-            'name', 'description',
-            ]
+default_product_fields = ['id', 'name', 'description']
 
 
-class SofaSerializer(serializers.ModelSerializer):
-    product = ProductSerializer()
+class SofaListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Sofa
-        fields = [
-            'id', 'product', 'size', 'mechanism',
-            'collection', 'code'
-        ]
+        fields = default_product_fields
+        fields.extend([
+            'mechanism', 'collection', 'code',
+        ])
 
 
-class TableSerializer(serializers.ModelSerializer):
-    product = ProductSerializer()
+class SofaOptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SofaOption
+        fields = ['id', 'size']
+
+
+class SofaDetailSerializer(serializers.ModelSerializer):
+    options = SofaOptionSerializer(many=True)
 
     class Meta:
-        model = Table
-        fields = [
-            'id', 'product', 'type', 'collection'
-        ]
+        model = Sofa
+        fields = default_product_fields
+        fields.extend([
+            'mechanism', 'collection', 'code',
+            'options',
+        ])
