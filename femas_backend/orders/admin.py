@@ -1,3 +1,15 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import *
+
+
+class OrderAdmin(admin.ModelAdmin):
+    readonly_fields = ('total_price',)
+
+
+class OrderedProductAdmin(admin.ModelAdmin):
+    readonly_fields = ('price', 'name', 'product_code')
+
+
+admin.site.register(Order, OrderAdmin)
+admin.site.register(OrderedProduct, OrderedProductAdmin)
