@@ -4,7 +4,7 @@ from .models import *
 
 default_product_fields = ['id', 'name', 'description']
 default_product_detail_fields = [
-    'id', 'name', 'description', 'photos', 'videos']
+    'id', 'name', 'class_name', 'description', 'photos', 'videos']
 
 
 class PhotoUrlField(serializers.RelatedField):
@@ -40,7 +40,7 @@ class SofaListSerializer(serializers.ModelSerializer):
         model = Sofa
         fields = default_product_fields
         fields.extend([
-            'mechanism', 'collection', 'code',
+            'mechanism', 'collection',
         ])
 
 
@@ -57,6 +57,6 @@ class SofaDetailSerializer(ProductDetailSerializer):
         model = Sofa
         fields = default_product_detail_fields
         fields.extend([
-            'mechanism', 'collection', 'code',
+            'mechanism', 'collection',
             'options',
         ])

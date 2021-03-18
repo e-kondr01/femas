@@ -23,47 +23,42 @@ class Order(models.Model):
         total_sum = 0
         for product in self.products.all():
             total_sum += product.price() * product.quantity
+        for product_option in self.product_options.all():
+            total_sum += product_option.price() * product_option.quantity
         return total_sum
 
 
 class OrderedProduct(models.Model):
     order = models.ForeignKey(
-        to=Order, on_delete=models.CASCADE, related_name="products"
-    )
+        to=Order, related_name='products', on_delete=models.CASCADE)
     quantity = models.PositiveSmallIntegerField(default=1)
-
-    product_content_type = models.ForeignKey(
-        ContentType, on_delete=models.CASCADE,
-        related_name='ordered_products'
-    )
-    product_id = models.PositiveIntegerField()
-    product_object = GenericForeignKey(
-        'product_content_type', 'product_id')
-
-    product_option_content_type = models.ForeignKey(
-        ContentType, on_delete=models.CASCADE,
-        related_name='ordered_options',
-        blank=True)
-    product_option_id = models.PositiveIntegerField(blank=True)
-    product_option_object = GenericForeignKey(
-        'product_option_content_type', 'product_option_id')
+    product_version = models.ForeignKey(
+        to=ProductVersion, related_name='ordered_products',
+        on_delete=models.CASCADE)
 
     def price(self):
-        if (self.product_option_id and
-                self.product_option_object.price):
-            return self.product_option_object.price
-        else:
-            return self.product_object.price
+        return self.product_version.price
 
     def name(self):
-        if self.product_option_id:
-            return self.product_option_object.__str__()
-        else:
-            return self.product_object.__str__()
+        return self.product_version.__str__()
 
     def product_code(self):
-        if (self.product_option_id and
-                self.product_option_object.product_code):
-            return self.product_option_object.product_code
-        else:
-            return self.product_object.product_code
+        return self.product_version.product_object.product_code
+
+
+class OrderedProductOption(models.Model):
+    order = models.ForeignKey(
+        to=Order, related_name='product_options', on_delete=models.CASCADE)
+    quantity = models.PositiveSmallIntegerField(default=1)
+    product_option_version = models.ForeignKey(
+        to=ProductOptionVersion, related_name='ordered_product_options',
+        on_delete=models.CASCADE)
+
+    def price(self):
+        return self.product_option_version.price
+
+    def name(self):
+        return self.product_option_version.__str__()
+
+    def product_code(self):
+        return self.product_option_version.product_option_object.product_code
