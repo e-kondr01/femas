@@ -6,6 +6,20 @@ from .models import *
 
 
 class OrderedProductSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = OrderedProduct
+        fields = ['name', 'price', 'quantity', ]
+
+
+class OrderedProductOptionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = OrderedProductOption
+        fields = ['name', 'price', 'quantity', ]
+
+
+class OrderedProductIdsSerializer(serializers.ModelSerializer):
     product_id = serializers.IntegerField()
     class_name = serializers.CharField()
 
@@ -15,7 +29,7 @@ class OrderedProductSerializer(serializers.ModelSerializer):
             'quantity', 'product_id', 'class_name']
 
 
-class OrderedProductOptionSerializer(serializers.ModelSerializer):
+class OrderedOptionIdsSerializer(serializers.ModelSerializer):
     option_id = serializers.IntegerField()
     class_name = serializers.CharField()
 
@@ -25,11 +39,30 @@ class OrderedProductOptionSerializer(serializers.ModelSerializer):
             'quantity', 'option_id', 'class_name']
 
 
-class OrderSerializer(serializers.ModelSerializer):
-    ordered_products = OrderedProductSerializer(
+class RetrieveOrderSerializer(serializers.ModelSerializer):
+    products = OrderedProductSerializer(
+        many=True
+    )
+    product_options = OrderedProductOptionSerializer(
+        many=True
+    )
+
+    class Meta:
+        model = Order
+        fields = ['id',
+                  'name', 'surname', 'phone', 'email',
+                  'city', 'delivery_address', 'entrance',
+                  'floor',
+                  'total_price',
+                  'products', 'product_options'
+                  ]
+
+
+class CreateOrderSerializer(serializers.ModelSerializer):
+    ordered_product_ids = OrderedProductIdsSerializer(
         many=True, required=False
     )
-    ordered_product_options = OrderedProductOptionSerializer(
+    ordered_option_ids = OrderedOptionIdsSerializer(
         many=True, required=False
     )
 
@@ -39,15 +72,13 @@ class OrderSerializer(serializers.ModelSerializer):
             'name', 'surname', 'phone', 'email',
             'city', 'delivery_address', 'entrance',
             'floor',
-            'ordered_products', 'ordered_product_options',
-            'total_price'
+            'ordered_product_ids', 'ordered_option_ids',
         ]
-        read_only_fields = ['total_price']
 
     def create(self, validated_data):
-        ordered_products_data = validated_data.pop('ordered_products', [])
+        ordered_products_data = validated_data.pop('ordered_product_ids', [])
         ordered_options_data = validated_data.pop(
-            'ordered_product_options_data', [])
+            'ordered_option_ids', [])
         order = Order.objects.create(**validated_data)
         for ordered_product in ordered_products_data:
             product_id = ordered_product.pop('product_id')
@@ -63,9 +94,8 @@ class OrderSerializer(serializers.ModelSerializer):
             class_name = ordered_option.pop('class_name')
             option_class = getattr(modules[__name__], class_name)
             option_object = option_class.objects.get(pk=option_id)
-            option_version = option_object.versions.get(current=True)
             OrderedProductOption.objects.create(
-                product_option_version=option_version,
                 order=order,
+                content_object=option_object,
                 **ordered_option)
         return order

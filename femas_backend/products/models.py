@@ -50,30 +50,14 @@ class ProductVersion(models.Model):
         return f'{self.content_object}'
 
 
-class ProductOptionVersion(models.Model):
-    current = models.BooleanField(default=False)
-    actual_from = models.DateTimeField(auto_now_add=True)
-    actual_to = models.DateTimeField(blank=True, null=True)
-    price = models.DecimalField(max_digits=9, decimal_places=2)
-
-    content_type = models.ForeignKey(
-        ContentType, on_delete=models.CASCADE,
-        blank=True)
-    object_id = models.PositiveIntegerField(blank=True)
-    content_object = GenericForeignKey()
-
-    def __str__(self) -> str:
-        return f'{self.content_object}'
-
-
 class Product(models.Model):
     name = models.CharField(max_length=256, verbose_name="наименование")
     description = models.TextField(blank=True, verbose_name="описание")
     photos = GenericRelation(ProductPhoto)
     videos = GenericRelation(ProductVideo)
     versions = GenericRelation(ProductVersion)
-    price = models.DecimalField(max_digits=9, decimal_places=2,
-                                blank=True, verbose_name="стоимость")
+    price = models.DecimalField(
+        max_digits=9, decimal_places=2, verbose_name="стоимость")
     product_code = models.CharField(max_length=32,
                                     verbose_name="артикул",
                                     blank=True)
@@ -90,16 +74,15 @@ class Product(models.Model):
     def class_name(self):
         return self.__class__.__name__
 
+    def get_absolute_url(self):
+        return f'https://femas.ru/{self.class_name()}s/{self.pk}'
+
     class Meta:
         abstract = True
 
 
 class ProductOption(models.Model):
-    price = models.DecimalField(max_digits=9, decimal_places=2,
-                                verbose_name="стоимость")
-    product_code = models.CharField(max_length=128, verbose_name="артикул",
-                                    blank=True)
-    versions = GenericRelation(ProductOptionVersion)
+    product_code = models.CharField(max_length=128, verbose_name="артикул")
 
     class Meta:
         abstract = True
@@ -116,7 +99,7 @@ class Sofa(Product):
 
 
 class SofaOption(ProductOption):
-    sofa = models.ForeignKey(
+    product = models.ForeignKey(
         to=Sofa, on_delete=models.CASCADE, related_name="options",
         verbose_name="диван"
     )

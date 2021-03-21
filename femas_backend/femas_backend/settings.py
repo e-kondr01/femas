@@ -39,6 +39,7 @@ APPEND_SLASH = False
 INSTALLED_APPS = [
     'orders',
     'products',
+    'promo',
 
     'django_filters',
     'rest_framework',
@@ -141,6 +142,13 @@ SECURE_HSTS_SECONDS = env.int('SECURE_HSTS_SECONDS')
 SECURE_HSTS_INCLUDE_SUBDOMAINS = env.bool('SECURE_HSTS_INCLUDE_SUBDOMAINS')
 SECURE_HSTS_PRELOAD = env.bool('SECURE_HSTS_PRELOAD')
 SECURE_PROXY_SSL_HEADER = env.tuple('SECURE_PROXY_SSL_HEADER')
+
+# Email
+
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_PORT = env.int('EMAIL_PORT')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
 
 ''' Third party settings '''

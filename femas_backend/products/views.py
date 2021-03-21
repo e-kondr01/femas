@@ -18,6 +18,9 @@ non_filter_properties = [
     "product",
     "id",
     "objects",
+    'photos',
+    'videos',
+    'versions'
 ]
 
 allowed_objects = [
@@ -92,3 +95,19 @@ class ObjectDetailView(generics.RetrieveAPIView):
         obj = getattr(modules[__name__], serializer_name)
         self.serializer_class = obj
         return self.serializer_class
+
+
+class AllProductsSearchView(generics.ListAPIView):
+    serializer_class = SearchProductsSerializer
+
+    def get_queryset(self):
+        name = self.request.query_params.get(
+            'name', None)
+        q = Sofa.objects.values('id', 'name').filter(name__contains=name)
+        for object_name in allowed_objects:
+            class_name = object_name.capitalize()
+            obj = getattr(modules[__name__], class_name)
+            q1 = obj.objects.values('id', 'name').filter(
+                name__contains=name)
+            q = q.union(q1)
+        return q

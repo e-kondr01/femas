@@ -23,8 +23,8 @@ class Order(models.Model):
         total_sum = 0
         for product in self.products.all():
             total_sum += product.price() * product.quantity
-        for product_option in self.product_options.all():
-            total_sum += product_option.price() * product_option.quantity
+        for option in self.product_options.all():
+            total_sum += option.price() * option.quantity
         return total_sum
 
 
@@ -50,15 +50,16 @@ class OrderedProductOption(models.Model):
     order = models.ForeignKey(
         to=Order, related_name='product_options', on_delete=models.CASCADE)
     quantity = models.PositiveSmallIntegerField(default=1)
-    product_option_version = models.ForeignKey(
-        to=ProductOptionVersion, related_name='ordered_product_options',
-        on_delete=models.CASCADE)
+
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey()
 
     def price(self):
-        return self.product_option_version.price
+        return self.content_object.product.versions.get(current=True).price
 
     def name(self):
-        return self.product_option_version.__str__()
+        return self.content_object.__str__()
 
     def product_code(self):
-        return self.product_option_version.product_option_object.product_code
+        return self.content_object.product_code
