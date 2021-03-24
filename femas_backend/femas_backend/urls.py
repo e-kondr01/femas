@@ -16,9 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
+from products.views import CategoriesListView
+
 urlpatterns = [
     path('django-admin', admin.site.urls),
     path('products', include('products.urls')),
     path('orders', include('orders.urls')),
-    path('promo', include('promo.urls'))
+    path('promo', include('promo.urls')),
+    path('categories', CategoriesListView.as_view()),
 ]

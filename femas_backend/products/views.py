@@ -3,6 +3,8 @@ from sys import modules
 from django.db.models.query import QuerySet
 from django.http import Http404
 from rest_framework import generics
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 from .models import *
 from .serializers import *
@@ -111,3 +113,18 @@ class AllProductsSearchView(generics.ListAPIView):
                 name__contains=name)
             q = q.union(q1)
         return q
+
+
+class CategoriesListView(APIView):
+
+    def get(self, request, *args, **kwargs):
+        categories = [
+            ["диваны", "sofas"],
+            ["кровати", "beds"],
+            ["столы", "tables"],
+            ["кресла", "armchairs"],
+            ["стулья", "chairs"],
+            ["кухонная утварь", "kitchenwares"],
+            ["аксессуары", "accessorys"],
+        ]
+        return Response(categories)
