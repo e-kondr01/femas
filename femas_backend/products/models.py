@@ -47,7 +47,9 @@ class ProductVersion(models.Model):
     content_object = GenericForeignKey()
 
     def __str__(self) -> str:
-        return f'{self.content_object}'
+        s = (f'{self.content_object} по цене {self.price} от '
+             '{self.actual_from} до {self.actual_to}')
+        return s
 
 
 class Product(models.Model):
@@ -66,7 +68,7 @@ class Product(models.Model):
         return f"{self.name}"
 
     def has_options(self):
-        if self.options:
+        if self.options.count():
             return True
         else:
             return False
@@ -87,6 +89,9 @@ class ProductOption(models.Model):
     class Meta:
         abstract = True
 
+    def class_name(self):
+        return self.__class__.__name__
+
 
 class Sofa(Product):
     mechanism = models.CharField(max_length=128, verbose_name="механизм")
@@ -106,7 +111,7 @@ class SofaOption(ProductOption):
     size = models.CharField(max_length=128, verbose_name="размер")
 
     def __str__(self) -> str:
-        return f"{self.sofa} {self.size}"
+        return f"{self.product} {self.size}"
 
     class Meta:
         verbose_name = "модификация дивана"

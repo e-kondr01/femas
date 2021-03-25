@@ -1,5 +1,3 @@
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 from products.models import *
@@ -23,8 +21,6 @@ class Order(models.Model):
         total_sum = 0
         for product in self.products.all():
             total_sum += product.price() * product.quantity
-        for option in self.product_options.all():
-            total_sum += option.price() * option.quantity
         return total_sum
 
 
@@ -35,31 +31,21 @@ class OrderedProduct(models.Model):
     product_version = models.ForeignKey(
         to=ProductVersion, related_name='ordered_products',
         on_delete=models.CASCADE)
+    option_id = models.IntegerField(default=0)
 
     def price(self):
         return self.product_version.price
 
     def name(self):
-        return self.product_version.__str__()
+        if self.option_id:
+            return self.product_version.content_object.options.get(
+                pk=self.option_id).__str__()
+        else:
+            return self.product_version.content_object.__str__()
 
     def product_code(self):
-        return self.product_version.product_object.product_code
-
-
-class OrderedProductOption(models.Model):
-    order = models.ForeignKey(
-        to=Order, related_name='product_options', on_delete=models.CASCADE)
-    quantity = models.PositiveSmallIntegerField(default=1)
-
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey()
-
-    def price(self):
-        return self.content_object.product.versions.get(current=True).price
-
-    def name(self):
-        return self.content_object.__str__()
-
-    def product_code(self):
-        return self.content_object.product_code
+        if self.option_id:
+            return self.product_version.content_object.options.get(
+                pk=self.option_id).product_code
+        else:
+            return self.product_version.content_object.product_code
