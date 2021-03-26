@@ -119,12 +119,19 @@ class CategoriesListView(APIView):
 
     def get(self, request, *args, **kwargs):
         categories = [
-            ["диваны", "sofas"],
-            ["кровати", "beds"],
-            ["столы", "tables"],
-            ["кресла", "armchairs"],
-            ["стулья", "chairs"],
-            ["кухонная утварь", "kitchenwares"],
-            ["аксессуары", "accessorys"],
+            {'name': 'диваны',
+             'link': 'sofas'},
+            {'name': 'кровати',
+             'link': 'beds'},
+            {'name': 'столы',
+             'link': 'tables'},
+            {'name': 'кресла',
+             'link': 'armchairs'},
+            {'name': 'стулья',
+             'link': 'chairs'},
+            {'name': 'кухонная утварь',
+             'link': 'kitchenwares'},
+            {'name': 'аксессуары',
+             'link': 'accessorys'},
         ]
         return Response(categories)
