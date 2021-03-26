@@ -19,9 +19,9 @@ from django.urls import include, path
 from products.views import CategoriesListView
 
 urlpatterns = [
-    path('django-admin', admin.site.urls),
-    path('products', include('products.urls')),
-    path('orders', include('orders.urls')),
-    path('promo', include('promo.urls')),
-    path('categories', CategoriesListView.as_view()),
+    path('femas/django-admin', admin.site.urls),
+    path('femas/products', include('products.urls')),
+    path('femas/orders', include('orders.urls')),
+    path('femas/promo', include('promo.urls')),
+    path('femas/categories', CategoriesListView.as_view()),
 ]

@@ -48,7 +48,7 @@ class ProductVersion(models.Model):
 
     def __str__(self) -> str:
         s = (f'{self.content_object} по цене {self.price} от '
-             '{self.actual_from} до {self.actual_to}')
+             f'{self.actual_from} до {self.actual_to}')
         return s
 
 
