@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from django.core.mail import send_mail
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
@@ -8,64 +10,70 @@ admin_mail = "e.kondr01@gmail.com"
 mail_from = 'noreply@e-kondr01.ru'
 
 
-def email_order(serializer):
-    to = serializer.validated_data['email']
-    data = serializer.validated_data
-    subject = 'Ваш заказ на сайте Femas'
+def format_consumer_message(data):
     msg = (f'Уважаемый {data["name"]} {data["surname"]}!\n'
            f'Детали по вашему заказу номер {data["id"]} с сайта Femas:\n'
-           f'Общая стоимость заказа: {data["total_price"]}\n'
+           f'Общая стоимость заказа: {data["total_price"]}р.\n'
            f'Состав заказа:\n')
-    for product in data["products"]:
-        msg += (f'{product.name}, стоимость {product.price}, '
-                f'количество {product.quantity}\n')
-    for option in data["option"]:
-        msg += (f'{option.name}, стоимость {option.price}, '
-                f'количество {option.quantity}\n')
-    msg += ('Детали доставки\n'
+    for product in data['products']:
+        product_data = dict(OrderedDict(product))
+        msg += (f'{product_data["name"]}, стоимость {product_data["price"]}р.,'
+                f' количество {product_data["quantity"]}\n')
+    msg += ('Детали доставки:\n'
             f'Телефон: {data["phone"]}, '
             f'город: {data["city"]}, '
             f'адрес: {data["delivery_address"]}, '
             f'подъезд: {data["entrance"]}\n'
             '\nЭто сообщение было автоматически сгенерировано.')
-    send_mail(
-        subject,
-        msg,
-        mail_from,
-        [to]
-    )
+    return msg
+
+
+def format_admin_message(data):
+    msg = (
+        f'{data["name"]} {data["surname"]} '
+        f'оставил заказ на сайте Femas под номером {data["id"]}.\n'
+        f'Общая стоимость заказа: {data["total_price"]}р.\n'
+        f'Состав заказа:\n')
+    for product in data["products"]:
+        product_data = dict(OrderedDict(product))
+        msg += (f'{product_data["name"]}, стоимость {product_data["price"]}р.,'
+                f' количество {product_data["quantity"]}\n')
+    msg += ('Детали доставки:\n'
+            f'Телефон: {data["phone"]}, '
+            f'город: {data["city"]}, '
+            f'адрес: {data["delivery_address"]}, '
+            f'подъезд: {data["entrance"]}\n'
+            '\nЭто сообщение было автоматически сгенерировано.')
+    return msg
+
+
+def email_order(data):
+    to = data['email']
+    subject = 'Ваш заказ на сайте Femas'
+    msg = format_consumer_message(data)
+    print(msg)
+    # send_mail(
+    #     subject,
+    #     msg,
+    #     mail_from,
+    #     [to]
+    # )
 
     to = admin_mail
     subject = 'Через сайт Femas был совершён заказ'
-    msg = (
-        f'{data["name"]} {data["surname"]}'
-        f'оставил заказ на сайте Femas под номером {data["id"]}.\n'
-        f'Общая стоимость заказа: {data["total_price"]}\n'
-        f'Состав заказа:\n')
-    for product in data["products"]:
-        msg += (f'{product.name}, стоимость {product.price}, '
-                f'количество {product.quantity}\n')
-    for option in data["option"]:
-        msg += (f'{option.name}, стоимость {option.price}, '
-                f'количество {option.quantity}\n')
-    msg += ('Детали доставки\n'
-            f'Телефон: {data["phone"]}, '
-            f'город: {data["city"]}, '
-            f'адрес: {data["delivery_address"]}, '
-            f'подъезд: {data["entrance"]}\n'
-            '\nЭто сообщение было автоматически сгенерировано.')
-    send_mail(
-        subject,
-        msg,
-        mail_from,
-        [to]
-    )
+    msg = format_admin_message(data)
+    print(msg)
+    # send_mail(
+    #     subject,
+    #     msg,
+    #     mail_from,
+    #     [to]
+    # )
 
 
 class CreateRetrieveModelMixin(CreateModelMixin):
     def perform_create(self, serializer):
-        #res = serializer.save()
-        # email_order(serializer)
+        # added return
         return serializer.save()
 
     def create(self, request, *args, **kwargs):
@@ -73,10 +81,11 @@ class CreateRetrieveModelMixin(CreateModelMixin):
         serializer.is_valid(raise_exception=True)
         instance = self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        serializer = self.retrieve_serializer_class(instance)
-        #  email_order(serializer)
+        retrieve_serializer = self.retrieve_serializer_class(instance)
+        email_order(retrieve_serializer.data)
 
-        return Response(serializer.data, status=status.HTTP_201_CREATED,
+        return Response(retrieve_serializer.data,
+                        status=status.HTTP_201_CREATED,
                         headers=headers)
 
 
