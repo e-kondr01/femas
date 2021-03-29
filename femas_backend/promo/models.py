@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 
 
@@ -11,6 +13,10 @@ class Promo(models.Model):
                                       verbose_name='активно с')
     active_till = models.DateTimeField(
         verbose_name='активно до', blank=True, null=True)
+    uuid = models.UUIDField(
+        unique=True,
+        default=uuid.uuid4,
+        editable=False)
 
     def __str__(self) -> str:
         return f"{self.title} от {self.created_at}"

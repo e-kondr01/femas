@@ -12,7 +12,7 @@ mail_from = 'noreply@e-kondr01.ru'
 
 def format_consumer_message(data):
     msg = (f'Уважаемый {data["name"]} {data["surname"]}!\n'
-           f'Детали по вашему заказу номер {data["id"]} с сайта Femas:\n'
+           f'Детали по вашему заказу номер {data["uuid"]} с сайта Femas:\n'
            f'Общая стоимость заказа: {data["total_price"]}р.\n'
            f'Состав заказа:\n')
     for product in data['products']:
@@ -31,7 +31,7 @@ def format_consumer_message(data):
 def format_admin_message(data):
     msg = (
         f'{data["name"]} {data["surname"]} '
-        f'оставил заказ на сайте Femas под номером {data["id"]}.\n'
+        f'оставил заказ на сайте Femas под номером {data["uuid"]}.\n'
         f'Общая стоимость заказа: {data["total_price"]}р.\n'
         f'Состав заказа:\n')
     for product in data["products"]:
@@ -51,7 +51,6 @@ def email_order(data):
     to = data['email']
     subject = 'Ваш заказ на сайте Femas'
     msg = format_consumer_message(data)
-    print(msg)
     send_mail(
         subject,
         msg,
@@ -62,7 +61,6 @@ def email_order(data):
     to = admin_mail
     subject = 'Через сайт Femas был совершён заказ'
     msg = format_admin_message(data)
-    print(msg)
     send_mail(
         subject,
         msg,

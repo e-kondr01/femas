@@ -71,6 +71,8 @@ class ObjectListView(generics.ListAPIView):
 
 
 class ObjectDetailView(generics.RetrieveAPIView):
+    lookup_field = 'uuid'
+
     def get_queryset(self):
         object_name = self.kwargs["product_class"][
             : len(self.kwargs["product_class"]) - 1
@@ -105,11 +107,11 @@ class AllProductsSearchView(generics.ListAPIView):
     def get_queryset(self):
         name = self.request.query_params.get(
             'name', None)
-        q = Sofa.objects.values('id', 'name').filter(name__contains=name)
+        q = Sofa.objects.values('uuid', 'name').filter(name__contains=name)
         for object_name in allowed_objects:
             class_name = object_name.capitalize()
             obj = getattr(modules[__name__], class_name)
-            q1 = obj.objects.values('id', 'name').filter(
+            q1 = obj.objects.values('uuid', 'name').filter(
                 name__contains=name)
             q = q.union(q1)
         return q

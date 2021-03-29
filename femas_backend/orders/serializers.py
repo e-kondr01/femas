@@ -14,13 +14,13 @@ class RetrieveOrderedProductSerializer(serializers.ModelSerializer):
 
 
 class CreateOrderedProductSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField()
+    uuid = serializers.CharField()
     class_name = serializers.CharField()
 
     class Meta:
         model = OrderedProduct
         fields = [
-            'quantity', 'id', 'class_name']
+            'quantity', 'uuid', 'class_name']
 
 
 class RetrieveOrderSerializer(serializers.ModelSerializer):
@@ -30,7 +30,7 @@ class RetrieveOrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ['id',
+        fields = ['uuid',
                   'name', 'surname', 'phone', 'email',
                   'city', 'delivery_address', 'entrance',
                   'floor',
@@ -59,21 +59,22 @@ class CreateOrderSerializer(serializers.ModelSerializer):
             raise ValidationError({'error': 'must include ordered products'})
         order = Order.objects.create(**validated_data)
         for ordered_product in ordered_products_data:
-            id = ordered_product.pop('id')
+            uuid = ordered_product.pop('uuid')
             class_name = ordered_product.pop('class_name')
             if "Option" in class_name:
                 product_option_class = getattr(modules[__name__], class_name)
-                product_object = product_option_class.objects.get(
-                    pk=id).product
+                option_object = product_option_class.objects.get(
+                    uuid=uuid)
+                product_object = option_object.product
                 product_version = product_object.versions.get(current=True)
                 OrderedProduct.objects.create(
                     product_version=product_version,
                     order=order,
-                    option_id=id,
+                    option_id=option_object.id,
                     **ordered_product)
             else:
                 product_class = getattr(modules[__name__], class_name)
-                product_object = product_class.objects.get(pk=id)
+                product_object = product_class.objects.get(uuid=uuid)
                 if product_object.has_options():
                     raise ValidationError(
                         {'error': ('Cannot order product with unspecified '

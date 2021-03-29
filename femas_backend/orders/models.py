@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 
 from products.models import *
@@ -13,6 +15,10 @@ class Order(models.Model):
     entrance = models.CharField(max_length=8, blank=True)
     floor = models.CharField(max_length=4, blank=True)
     date = models.DateTimeField(auto_now_add=True)
+    uuid = models.UUIDField(
+        unique=True,
+        default=uuid.uuid4,
+        editable=False)
 
     def __str__(self) -> str:
         return f"Заказ {self.name} {self.surname} от {self.date}"

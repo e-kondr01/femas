@@ -2,9 +2,9 @@ from rest_framework import serializers
 
 from .models import *
 
-default_product_fields = ['id', 'name', 'price', 'description', 'photos']
+default_product_fields = ['uuid', 'name', 'price', 'description', 'photos']
 default_product_detail_fields = [
-    'id', 'name', 'class_name', 'description', 'photos', 'videos']
+    'uuid', 'name', 'class_name', 'description', 'photos', 'videos']
 
 
 class PhotoUrlField(serializers.RelatedField):
@@ -51,7 +51,7 @@ class SofaListSerializer(ProductListSerializer):
 class SofaOptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = SofaOption
-        fields = ['id', 'size', 'class_name']
+        fields = ['uuid', 'size', 'class_name']
 
 
 class SofaDetailSerializer(ProductDetailSerializer):
@@ -67,8 +67,8 @@ class SofaDetailSerializer(ProductDetailSerializer):
 
 
 class SearchProductsSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
+    uuid = serializers.CharField()
     name = serializers.CharField()
 
     class Meta:
-        fields = ['id', 'name']
+        fields = ['uuid', 'name']

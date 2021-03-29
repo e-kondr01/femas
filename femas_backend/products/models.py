@@ -1,3 +1,5 @@
+import uuid
+
 from django.contrib.contenttypes.fields import (GenericForeignKey,
                                                 GenericRelation)
 from django.contrib.contenttypes.models import ContentType
@@ -63,6 +65,10 @@ class Product(models.Model):
     product_code = models.CharField(max_length=32,
                                     verbose_name="артикул",
                                     blank=True)
+    uuid = models.UUIDField(
+        unique=True,
+        default=uuid.uuid4,
+        editable=False)
 
     def __str__(self) -> str:
         return f"{self.name}"
@@ -77,7 +83,7 @@ class Product(models.Model):
         return self.__class__.__name__
 
     def get_absolute_url(self):
-        return f'https://femas.ru/{self.class_name()}s/{self.pk}'
+        return f'https://femas.ru/{self.class_name()}s/{self.uuid}'
 
     class Meta:
         abstract = True
@@ -85,6 +91,10 @@ class Product(models.Model):
 
 class ProductOption(models.Model):
     product_code = models.CharField(max_length=128, verbose_name="артикул")
+    uuid = models.UUIDField(
+        unique=True,
+        default=uuid.uuid4,
+        editable=False)
 
     class Meta:
         abstract = True
