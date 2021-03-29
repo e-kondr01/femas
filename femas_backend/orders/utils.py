@@ -52,23 +52,23 @@ def email_order(data):
     subject = 'Ваш заказ на сайте Femas'
     msg = format_consumer_message(data)
     print(msg)
-    # send_mail(
-    #     subject,
-    #     msg,
-    #     mail_from,
-    #     [to]
-    # )
+    send_mail(
+        subject,
+        msg,
+        mail_from,
+        [to]
+    )
 
     to = admin_mail
     subject = 'Через сайт Femas был совершён заказ'
     msg = format_admin_message(data)
     print(msg)
-    # send_mail(
-    #     subject,
-    #     msg,
-    #     mail_from,
-    #     [to]
-    # )
+    send_mail(
+        subject,
+        msg,
+        mail_from,
+        [to]
+    )
 
 
 class CreateRetrieveModelMixin(CreateModelMixin):
