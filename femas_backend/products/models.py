@@ -4,6 +4,7 @@ from django.contrib.contenttypes.fields import (GenericForeignKey,
                                                 GenericRelation)
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from django.utils import timezone
 
 
 class ProductPhoto(models.Model):
@@ -84,6 +85,21 @@ class Product(models.Model):
 
     def get_absolute_url(self):
         return f'https://femas.ru/{self.class_name()}s/{self.uuid}'
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        previous_version = self.versions.filter(current=True).first()
+        if previous_version and previous_version.price != self.price:
+            version = ProductVersion.objects.create(
+                content_object=self, price=self.price, current=True)
+            version.save()
+            previous_version.current = False
+            previous_version.actual_to = timezone.now()
+            previous_version.save()
+        if not previous_version:
+            version = ProductVersion.objects.create(
+                content_object=self, price=self.price, current=True)
+            version.save()
 
     class Meta:
         abstract = True

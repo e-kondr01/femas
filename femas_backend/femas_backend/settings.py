@@ -37,10 +37,6 @@ APPEND_SLASH = False
 # Application definition
 
 INSTALLED_APPS = [
-    'orders',
-    'products',
-    'promo',
-
     'django_filters',
     'rest_framework',
 
@@ -50,6 +46,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'orders',
+    'products',
+    'promo',
 ]
 
 MIDDLEWARE = [

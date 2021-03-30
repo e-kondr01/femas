@@ -1,6 +1,10 @@
 import uuid
 
 from django.db import models
+from django.utils import timezone
+
+
+tz = timezone.get_default_timezone()
 
 
 class Promo(models.Model):
@@ -19,7 +23,8 @@ class Promo(models.Model):
         editable=False)
 
     def __str__(self) -> str:
-        return f"{self.title} от {self.created_at}"
+        return (f"{self.title} от "
+                f"{self.created_at.astimezone(tz).strftime('%d.%m.%Y %H:%M')}")
 
     class Meta:
         verbose_name = "акция"

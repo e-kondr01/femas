@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.auth.models import User, Group
 from django.contrib.contenttypes.admin import GenericStackedInline
 
 from .models import *
@@ -26,11 +27,18 @@ class SofaAdmin(admin.ModelAdmin):
     inlines = [SofaOptionInline, PhotoInline, VideoInline]
 
 
+class ProductAdmin(admin.ModelAdmin):
+    inlines = [PhotoInline, VideoInline]
+
+
 admin.site.register(Sofa, SofaAdmin)
-admin.site.register(Table)
-admin.site.register(Bed)
-admin.site.register(Armchair)
-admin.site.register(Chair)
-admin.site.register(Kitchenware)
-admin.site.register(Accessory)
-admin.site.register(ProductVersion)
+admin.site.register(Table, ProductAdmin)
+admin.site.register(Bed, ProductAdmin)
+admin.site.register(Armchair, ProductAdmin)
+admin.site.register(Chair, ProductAdmin)
+admin.site.register(Kitchenware, ProductAdmin)
+admin.site.register(Accessory, ProductAdmin)
+#  admin.site.register(ProductVersion)
+
+admin.site.unregister(User)
+admin.site.unregister(Group)

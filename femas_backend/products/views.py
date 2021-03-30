@@ -8,6 +8,7 @@ from rest_framework.response import Response
 
 from .models import *
 from .serializers import *
+from .product_class_names import allowed_objects
 
 non_filter_properties = [
     "__module__",
@@ -23,16 +24,6 @@ non_filter_properties = [
     'photos',
     'videos',
     'versions'
-]
-
-allowed_objects = [
-    "sofa",
-    "bed",
-    "table",
-    "armchair",
-    "chair",
-    "kitchenware",
-    "accessory",
 ]
 
 

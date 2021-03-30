@@ -4,6 +4,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from .models import *
+from products.product_class_names import allowed_objects
 
 
 class RetrieveOrderedProductSerializer(serializers.ModelSerializer):
