@@ -23,5 +23,7 @@ urlpatterns = [
     path('femas/products', include('products.urls')),
     path('femas/orders', include('orders.urls')),
     path('femas/promo', include('promo.urls')),
+    path('femas/interiors', include('ready_interiors.urls')),
+
     path('femas/categories', CategoriesListView.as_view()),
 ]

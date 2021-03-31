@@ -66,9 +66,10 @@ class SofaDetailSerializer(ProductDetailSerializer):
         ])
 
 
-class SearchProductsSerializer(serializers.Serializer):
+class AllProductsSerializer(serializers.Serializer):
     uuid = serializers.CharField()
     name = serializers.CharField()
+    photo = serializers.CharField()
 
     class Meta:
-        fields = ['uuid', 'name']
+        fields = ['uuid', 'name', 'photo']
