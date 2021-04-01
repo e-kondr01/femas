@@ -30,6 +30,8 @@ class Interior(models.Model):
         unique=True,
         default=uuid.uuid4,
         editable=False)
+    main_photo = models.ImageField(
+        upload_to="interior_photos", verbose_name="основное изображение")
 
     def __str__(self) -> str:
         return f"{self.name}"

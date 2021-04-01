@@ -70,6 +70,8 @@ class Product(models.Model):
         unique=True,
         default=uuid.uuid4,
         editable=False)
+    main_photo = models.ImageField(
+        upload_to='product_photos', verbose_name='основная фотография')
 
     def __str__(self) -> str:
         return f"{self.name}"

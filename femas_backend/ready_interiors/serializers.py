@@ -19,7 +19,7 @@ class InteriorListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Interior
-        fields = ['uuid', 'name', 'photos']
+        fields = ['uuid', 'name', 'main_photo']
 
 
 class InteriorDetailSerializer(serializers.ModelSerializer):
@@ -27,4 +27,5 @@ class InteriorDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Interior
-        fields = ['uuid', 'name', 'color', 'square', 'room_type', 'photos']
+        fields = ['uuid', 'name', 'color', 'square',
+                  'room_type', 'main_photo', 'photos']

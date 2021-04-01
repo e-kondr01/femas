@@ -2,9 +2,10 @@ from rest_framework import serializers
 
 from .models import *
 
-default_product_fields = ['uuid', 'name', 'price', 'description', 'photos']
+default_product_fields = ['uuid', 'name', 'price', 'description', 'main_photo']
 default_product_detail_fields = [
-    'uuid', 'name', 'class_name', 'description', 'photos', 'videos']
+    'uuid', 'name', 'class_name', 'description',
+    'main_photo', 'photos', 'videos']
 
 
 class PhotoUrlField(serializers.RelatedField):
