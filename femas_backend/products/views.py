@@ -23,7 +23,8 @@ non_filter_properties = [
     "objects",
     'photos',
     'videos',
-    'versions'
+    'versions',
+    'main_photo'
 ]
 
 host = 'https://e-kondr01.ru'
@@ -101,56 +102,22 @@ class AllProductsSearchView(generics.ListAPIView):
         name = self.request.query_params.get(
             'name', None)
         if name:
-            lst = list(Sofa.objects.values(
-                'uuid', 'name').filter(name__contains=name))
-            for obj in lst:
-                uuid = obj['uuid']
-                instance = Sofa.objects.get(uuid=uuid).photos.first()
-                if instance:
-                    photo = instance.photo
-                    obj['photo'] = host + photo.url
-                else:
-                    obj['photo'] = ''
+            q = Sofa.objects.values(
+                'uuid', 'name', 'main_photo').filter(name__contains=name)
             for object_name in allowed_objects:
                 class_name = object_name.capitalize()
                 klass = getattr(modules[__name__], class_name)
-                l1 = klass.objects.values('uuid', 'name').filter(
+                q1 = klass.objects.values('uuid', 'name', 'main_photo').filter(
                     name__contains=name)
-                if l1:
-                    for obj in l1:
-                        uuid = obj['uuid']
-                        instance = klass.objects.get(uuid=uuid).photos.first()
-                        if instance:
-                            photo = instance.photo
-                            obj['photo'] = host + photo.url
-                        else:
-                            obj['photo'] = ''
-                    lst.extend(l1)
+                q = q.union(q1)
         else:
-            lst = list(Sofa.objects.values('uuid', 'name'))
-            for obj in lst:
-                uuid = obj['uuid']
-                instance = Sofa.objects.get(uuid=uuid).photos.first()
-                if instance:
-                    photo = instance.photo
-                    obj['photo'] = host + photo.url
-                else:
-                    obj['photo'] = ''
+            q = Sofa.objects.values('uuid', 'name', 'main_photo')
             for object_name in allowed_objects:
                 class_name = object_name.capitalize()
                 klass = getattr(modules[__name__], class_name)
-                l1 = list(klass.objects.values('uuid', 'name'))
-                if l1:
-                    for obj in l1:
-                        uuid = obj['uuid']
-                        instance = klass.objects.get(uuid=uuid).photos.first()
-                        if instance:
-                            photo = instance.photo
-                            obj['photo'] = host + photo.url
-                        else:
-                            obj['photo'] = ''
-                    lst.extend(l1)
-        return lst
+                q1 = klass.objects.values('uuid', 'name', 'main_photo')
+                q = q.union(q1)
+        return q
 
 
 class CategoriesListView(APIView):

@@ -15,7 +15,6 @@ class PhotoUrlField(serializers.RelatedField):
 
 
 class InteriorListSerializer(serializers.ModelSerializer):
-    photos = PhotoUrlField(many=True, read_only=True)
 
     class Meta:
         model = Interior
