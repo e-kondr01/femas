@@ -9,7 +9,7 @@ tz = timezone.get_default_timezone()
 
 class Promo(models.Model):
     title = models.CharField(max_length=512, verbose_name='заголовок')
-    text = models.TextField(verbose_name="содержание")
+    main = models.BooleanField(default=False, verbose_name='основная картинка')
     photo = models.ImageField(
         upload_to="promo_photos", verbose_name="изображение", blank=True)
     active = models.BooleanField(verbose_name='действует')

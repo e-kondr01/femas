@@ -2,7 +2,8 @@ from rest_framework import serializers
 
 from .models import *
 
-default_product_fields = ['uuid', 'name', 'price', 'description', 'main_photo']
+default_product_fields = ['uuid', 'name', 'price',
+                          'class_name', 'description', 'main_photo']
 default_product_detail_fields = [
     'uuid', 'name', 'class_name', 'description',
     'main_photo', 'photos', 'videos']
@@ -71,6 +72,7 @@ class AllProductsSerializer(serializers.Serializer):
     uuid = serializers.CharField()
     name = serializers.CharField()
     main_photo = serializers.CharField()
+    class_name = serializers.CharField()
 
     class Meta:
-        fields = ['uuid', 'name', 'main_photo']
+        fields = ['uuid', 'name', 'main_photo', 'class_name']

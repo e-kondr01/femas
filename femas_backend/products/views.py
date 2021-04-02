@@ -101,23 +101,20 @@ class AllProductsSearchView(generics.ListAPIView):
     def get_queryset(self):
         name = self.request.query_params.get(
             'name', None)
-        if name:
-            q = Sofa.objects.values(
-                'uuid', 'name', 'main_photo').filter(name__contains=name)
-            for object_name in allowed_objects:
-                class_name = object_name.capitalize()
-                klass = getattr(modules[__name__], class_name)
-                q1 = klass.objects.values('uuid', 'name', 'main_photo').filter(
-                    name__contains=name)
-                q = q.union(q1)
-        else:
-            q = Sofa.objects.values('uuid', 'name', 'main_photo')
-            for object_name in allowed_objects:
-                class_name = object_name.capitalize()
-                klass = getattr(modules[__name__], class_name)
-                q1 = klass.objects.values('uuid', 'name', 'main_photo')
-                q = q.union(q1)
-        return q
+        queryset = []
+        for object_name in allowed_objects:
+            class_name = object_name.capitalize()
+            klass = getattr(modules[__name__], class_name)
+            if name:
+                objects = list(klass.objects.values(
+                    'uuid', 'name', 'main_photo').filter(
+                    name__contains=name))
+            else:
+                objects = klass.objects.values('uuid', 'name', 'main_photo')
+            for obj in objects:
+                obj['class_name'] = class_name
+            queryset.extend(objects)
+        return queryset
 
 
 class CategoriesListView(APIView):

@@ -7,4 +7,4 @@ class PromoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Promo
-        fields = ['uuid', 'title', 'text', 'photo', ]
+        fields = ['uuid', 'title', 'main', 'photo', ]
