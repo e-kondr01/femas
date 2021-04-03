@@ -1,3 +1,5 @@
+from copy import copy
+
 from rest_framework import serializers
 
 from .models import *
@@ -44,7 +46,7 @@ class SofaListSerializer(ProductListSerializer):
 
     class Meta:
         model = Sofa
-        fields = default_product_fields
+        fields = copy(default_product_fields)
         fields.extend([
             'mechanism', 'collection',
         ])
@@ -61,10 +63,128 @@ class SofaDetailSerializer(ProductDetailSerializer):
 
     class Meta:
         model = Sofa
-        fields = default_product_detail_fields
+        fields = copy(default_product_detail_fields)
         fields.extend([
             'mechanism', 'collection',
             'options',
+        ])
+
+
+class BedListSerializer(ProductListSerializer):
+
+    class Meta:
+        model = Bed
+        fields = copy(default_product_fields)
+        fields.extend([
+            'mechanism', 'size', 'headboard'
+        ])
+
+
+class BedDetailSerializer(ProductDetailSerializer):
+
+    class Meta:
+        model = Bed
+        fields = copy(default_product_detail_fields)
+        fields.extend([
+            'mechanism', 'size', 'headboard'
+        ])
+
+
+class TableListSerializer(ProductListSerializer):
+
+    class Meta:
+        model = Table
+        fields = copy(default_product_fields)
+        fields.extend([
+            'type', 'collection'
+        ])
+
+
+class TableDetailSerializer(ProductDetailSerializer):
+
+    class Meta:
+        model = Table
+        fields = copy(default_product_detail_fields)
+        fields.extend([
+            'type', 'collection'
+        ])
+
+
+class ArmchairListSerializer(ProductListSerializer):
+
+    class Meta:
+        model = Armchair
+        fields = copy(default_product_fields)
+        fields.extend([
+            'type'
+        ])
+
+
+class ArmchairDetailSerializer(ProductDetailSerializer):
+
+    class Meta:
+        model = Armchair
+        fields = copy(default_product_detail_fields)
+        fields.extend([
+            'type'
+        ])
+
+
+class ChairListSerializer(ProductListSerializer):
+
+    class Meta:
+        model = Chair
+        fields = copy(default_product_fields)
+        fields.extend([
+            'type'
+        ])
+
+
+class ChairDetailSerializer(ProductDetailSerializer):
+
+    class Meta:
+        model = Chair
+        fields = copy(default_product_detail_fields)
+        fields.extend([
+            'type'
+        ])
+
+
+class KitchenwareListSerializer(ProductListSerializer):
+
+    class Meta:
+        model = Kitchenware
+        fields = copy(default_product_fields)
+        fields.extend([
+        ])
+
+
+class KitchenwareDetailSerializer(ProductDetailSerializer):
+
+    class Meta:
+        model = Kitchenware
+        fields = copy(default_product_detail_fields)
+        fields.extend([
+        ])
+
+
+class AccessoryListSerializer(ProductListSerializer):
+
+    class Meta:
+        model = Accessory
+        fields = copy(default_product_fields)
+        fields.extend([
+            'type'
+        ])
+
+
+class AccessoryDetailSerializer(ProductDetailSerializer):
+
+    class Meta:
+        model = Accessory
+        fields = copy(default_product_detail_fields)
+        fields.extend([
+            'type'
         ])
 
 

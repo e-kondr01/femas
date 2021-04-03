@@ -34,6 +34,7 @@ class ObjectListView(generics.ListAPIView):
     filterset_fields = []
 
     def get_queryset(self):
+        self.filterset_fields = []
         object_name = self.kwargs["product_class"][
             : len(self.kwargs["product_class"]) - 1
         ]
